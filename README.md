@@ -4,7 +4,7 @@ simple_proxy
 Simple Proxy
 
 
-"""
+```
 liuzheng@liuzheng simple_proxy$ telnet 10.103.13.18 30000
 Trying 10.103.13.18...
 Connected to bjoern.test.api.3g.tudou.com.
@@ -63,4 +63,4 @@ STAT evictions 0
 STAT reclaimed 61713361
 END
 
-"""
+```
