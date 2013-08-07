@@ -5,7 +5,7 @@ Simple Proxy
 
 
 ```
-liuzheng@liuzheng simple_proxy$ telnet 10.103.13.18 30000
+liuzheng@liuzheng simple_proxy$ telnet 10.x.x.x 30000
 Trying 10.103.13.18...
 Connected to bjoern.test.api.3g.tudou.com.
 Escape character is '^]'.
