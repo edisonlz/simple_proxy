@@ -67,7 +67,7 @@ int connect_remote(char *server,int port){
     if (connect(remote, (struct sockaddr*) &sin, sizeof(sin))) {
         perror("connect remote");
         close(remote);
-        return 1;
+        return -1;
     }
 
     make_socket_non_blocking(remote);
@@ -123,6 +123,12 @@ void process_request(int client, int epoll_fd) {
 
         /*1. connect to remote server*/
         int remote = connect_remote(server, port);
+
+        if(remote == -1){
+            send_all(client , "remote server connection refused;");
+            close(client);
+            return;
+        }
 
         /*2. client event register remote info*/
         fd_map[client] = remote;
