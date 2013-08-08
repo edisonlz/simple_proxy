@@ -1,7 +1,9 @@
 simple_proxy
 ============
 
-Simple Proxy
+Simple Proxy Base on C Epoll framework
+
+https://github.com/edisonlz/c_epoll_framework
 
 
 ```
