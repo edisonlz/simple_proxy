@@ -35,7 +35,7 @@ void io_loop(int listen_sock, int epoll_fd) {
                     if (events & EPOLLIN) {
 
                         printf("process request, sock_fd %d\n", epoll_fd);
-                        //epoll_events[i].data.ptr = NULL;
+                        epoll_events[i].data.ptr = NULL;
                         process_request(epoll_events[i].data.fd, epoll_fd, &epoll_events[i]);
                         
                     }
@@ -128,7 +128,7 @@ void process_request(int client, int epoll_fd, struct epoll_event* ev) {
         data.pair_fd = remote;
         ev->data.ptr = &data;
 
-        printf("register %d %d" , client , remote);
+        printf("register %d %d\n" , client , remote);
         /*3. remote add to epoll */
         add_proxy_epoll_event(client, remote , epoll_fd);
 
