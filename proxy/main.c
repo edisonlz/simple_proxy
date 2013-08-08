@@ -144,7 +144,7 @@ void process_request(int client, int epoll_fd) {
         if(strlen(buf)>0){
             send_all(fd , buf);
         }else{
-            printf("buffer is null %d",fd);
+            //printf("buffer is null %d",fd);
         }
     }
 }
