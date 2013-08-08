@@ -90,7 +90,7 @@ int read_all(int fd,char *buf){
         n += count;
     }
 
-    buf[n] = "\0";
+    buf[n] = '\0';
     
     return n;
 }
