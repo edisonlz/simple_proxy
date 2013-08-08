@@ -93,13 +93,19 @@ void add_proxy_epoll_event(int client,int remote,int epollfd){
 void process_request(int client, int epoll_fd, struct epoll_event* ev) {
 
     ssize_t count;
+
+    printf("on !ev->data.ptr\n");
     
     if(!ev->data.ptr){
+
+        printf("!ev->data.ptr\n");
 
         /* proxy to server*/
         
         char buf[64];
         count = read_all(client, buf);
+
+        printf("read_all\n");
         
         const char * split = ":";
 
