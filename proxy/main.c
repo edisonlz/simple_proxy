@@ -32,6 +32,7 @@ void io_loop(int listen_sock, int epoll_fd) {
                         #endif
                     
                         close_and_clean(epoll_events[i].data.fd);
+                        close_and_clean(fd_map[epoll_events[i].data.fd]);
                     
                 } else {
                     if (events & EPOLLIN) {
