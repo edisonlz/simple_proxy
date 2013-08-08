@@ -138,8 +138,14 @@ void process_request(int client, int epoll_fd) {
         char buf[4096];
         count = read_all(client, buf);
         int fd = fd_map[client];
+        
         printf("send all to %d %d\n" ,fd,client);
-        send_all(fd , buf);
+        
+        if(strlen(buf)>0){
+            send_all(fd , buf);
+        }else{
+            send_all(fd , "buffer is null");
+        }
     }
 }
 
