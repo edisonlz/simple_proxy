@@ -37,7 +37,7 @@ void io_loop(int listen_sock, int epoll_fd) {
                     if (events & EPOLLIN) {
 
                         printf("process request, sock_fd %d\n", epoll_fd);
-                        process_request(epoll_events[i].data.fd, epoll_fd, &epoll_events[i]);
+                        process_request(epoll_events[i].data.fd, epoll_fd);
                     }
                     
                     if (events & EPOLLOUT) {
@@ -94,8 +94,6 @@ void process_request(int client, int epoll_fd) {
     ssize_t count;
     
     if(!fd_map[client]){
-
-        printf("!ev->data.ptr %d %d %d\n",ev->data.u64,ev->data.u32,ev->data.ptr);
 
         /* proxy to server*/
         
