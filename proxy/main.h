@@ -24,9 +24,13 @@
 
 #define DEBUG
 
+typedef struct {
+    int pair_fd;
+} pair_epoll_data;
+
 
 void io_loop(int listen_sock, int epollfd);
-void process_request(int client,int epoll_fd);
+void process_request(int client,int epoll_fd,epoll_event* ev);
 
 #endif
 

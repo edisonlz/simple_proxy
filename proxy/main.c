@@ -6,49 +6,6 @@
 #include <sys/select.h>
 
 
-
-void handle_tcp(int client,int remote){
-
-        fd_set readset;
-
-
-        while(1){
-
-                FD_ZERO(&readset);
-                FD_SET(client, &readset);
-                FD_SET(remote, &readset);
-
-                int maxfd = client > remote ? client+1 : remote+1;
-
-                int fd_num = select(maxfd, &readset, NULL, NULL, NULL);
-                printf("fd_num:%d \n",fd_num);
-                
-                if (fd_num < 0) {
-                    perror("select");
-                    return;
-                }
-
-                /* Process all of the fds that are still set in readset */
-                
-                if (FD_ISSET(client, &readset)) {
-                    char buf[4096];
-                    read_all(client, buf);
-                    printf("maxfd:%d,client:%d,remote:%d, %s\n", maxfd,client,remote,buf);
-                    send_all(remote, buf);
-                }
-                
-                if (FD_ISSET(remote, &readset)) {
-                    char buf[4096];
-                    read_all(remote, buf);
-                    printf("remote:%d,client:%d, %s\n", remote, client, buf);
-                    send_all(client, buf);
-                }
-
-        }
-}
-
-
-
 void io_loop(int listen_sock, int epoll_fd) {
 
     int nfds;
@@ -78,7 +35,7 @@ void io_loop(int listen_sock, int epoll_fd) {
                     if (events & EPOLLIN) {
 
                         printf("process request, sock_fd %d\n", epoll_fd);
-                        process_request(epoll_events[i].data.fd, epoll_fd);
+                        process_request(epoll_events[i].data.fd, epoll_fd,&epoll_events[i]);
                         
                     }
                     
@@ -116,29 +73,71 @@ int connect_remote(char *server,int port){
     return remote;
 }
 
+void add_proxy_epoll_event(int client,int remote){
 
-void process_request(int client, int epoll_fd) {
+    struct epoll_event ev;
+
+    pair_epoll_data data;
+    data.pair_fd = remote;
+    ev.data.ptr = &data;
+    
+    ev.events = EPOLLIN ; //| EPOLLOUT;  | EPOLLET; //  read, edge triggered
+    if (epoll_ctl(epollfd, EPOLL_CTL_ADD, remote, &ev) == -1) {
+        perror("remote proxy add event");
+        exit(EXIT_FAILURE);
+    }
+    
+}
+
+
+void process_request(int client, int epoll_fd, epoll_event* ev) {
 
     ssize_t count;
-    char buf[64];
-    count = read_all(client, buf);
+    
+    if(!ev.data.ptr){
 
-    const char * split = ":";
-    
-    char *server;
-    int port;
+        /* proxy to server*/
+        
+        char buf[64];
+        count = read_all(client, buf);
+        
+        const char * split = ":";
 
-    char * p;
-    p = strtok (buf, split);
-    server = p;
-    p = strtok(NULL, split);
-    port = atoi(p);
-    
-    printf("server:%s,port:%d\n",server,port);
-    
-    int remote = connect_remote(server, port);
-    
-    handle_tcp(client , remote);
+
+        char *server;
+        int port;
+
+        char * p;
+        p = strtok (buf, split);
+        server = p;
+        p = strtok(NULL, split);
+        port = atoi(p);
+
+        printf("server:%s,port:%d\n",server,port);
+
+        /*1. connect to remote server*/
+        int remote = connect_remote(server, port);
+
+        /*2. client event register remote info*/
+        pair_epoll_data data;
+        data.pair_fd = remote;
+        ev.data.ptr = &data;
+
+        printf("register %d %D" , client , remote)
+        /*3. remote add to epoll */
+        add_proxy_epoll_event(client,remote);
+
+    }else{
+        /*
+           1. client read to porxy
+           2. proxy read to client
+        */
+        char buf[4096];
+        count = read_all(client, buf);
+        pair_epoll_data * data = (pair_epoll_data *) ev.data.ptr;
+        printf("send all to %d" , data->pair_fd)
+        send_all(data->pair_fd , buf);
+    }
 }
 
 
