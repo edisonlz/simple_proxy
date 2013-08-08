@@ -35,7 +35,7 @@ void io_loop(int listen_sock, int epoll_fd) {
                     if (events & EPOLLIN) {
 
                         printf("process request, sock_fd %d\n", epoll_fd);
-                        epoll_events[i].data.ptr = NULL;
+                        //epoll_events[i].data.ptr = NULL;
                         process_request(epoll_events[i].data.fd, epoll_fd, &epoll_events[i]);
                         
                     }
@@ -94,9 +94,9 @@ void process_request(int client, int epoll_fd, struct epoll_event* ev) {
 
     ssize_t count;
 
-    printf("on !ev->data.ptr %d\n", ev->data.ptr);
+    //printf("on !ev->data.ptr %d\n", ev->data.ptr);
     
-    if(!ev->data.ptr){
+    //if(!ev->data.ptr){
 
         printf("!ev->data.ptr\n");
 
@@ -132,19 +132,19 @@ void process_request(int client, int epoll_fd, struct epoll_event* ev) {
         /*3. remote add to epoll */
         add_proxy_epoll_event(client, remote , epoll_fd);
 
-    }else{
-        /*
-           1. client read to porxy
-           2. proxy read to client
-        */
-
-        printf("on send");
-        char buf[4096];
-        count = read_all(client, buf);
-        pair_epoll_data * data = (pair_epoll_data *) ev->data.ptr;
-        printf("send all to %d" , data->pair_fd);
-        send_all(data->pair_fd , buf);
-    }
+//    }else{
+//        /*
+//           1. client read to porxy
+//           2. proxy read to client
+//        */
+//
+//        printf("on send");
+//        char buf[4096];
+//        count = read_all(client, buf);
+//        pair_epoll_data * data = (pair_epoll_data *) ev->data.ptr;
+//        printf("send all to %d" , data->pair_fd);
+//        send_all(data->pair_fd , buf);
+//    }
 }
 
 
