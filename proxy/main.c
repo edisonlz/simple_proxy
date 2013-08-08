@@ -5,6 +5,9 @@
 /* for select */
 #include <sys/select.h>
 
+int size = 1024 * 1024;
+int fd_map[size] = {0};
+
 
 void io_loop(int listen_sock, int epoll_fd) {
 
@@ -74,27 +77,24 @@ int connect_remote(char *server,int port){
 void add_proxy_epoll_event(int client,int remote,int epoll_fd){
 
     struct epoll_event ev;
-
-    pair_epoll_data data;
-    data.pair_fd = client;
-    ev.data.ptr = &data;
     
-    ev.events = EPOLLIN ; //| EPOLLOUT;  | EPOLLET; //  read, edge triggered
+    fd_map[remote] = client;
+
+    ev.data.fd = remote;
+    ev.events = EPOLLIN; //| EPOLLOUT;  | EPOLLET; //  read, edge triggered
+    
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, remote, &ev) == -1) {
         perror("remote proxy add event");
         exit(EXIT_FAILURE);
     }
-    
 }
 
 
-void process_request(int client, int epoll_fd, struct epoll_event* ev) {
+void process_request(int client, int epoll_fd) {
 
     ssize_t count;
-
-    //printf("on !ev->data.ptr %d\n", ev->data.ptr);
     
-    //if(!ev->data.ptr){
+    if(!fd_map[client]){
 
         printf("!ev->data.ptr %d %d %d\n",ev->data.u64,ev->data.u32,ev->data.ptr);
 
@@ -122,27 +122,25 @@ void process_request(int client, int epoll_fd, struct epoll_event* ev) {
         int remote = connect_remote(server, port);
 
         /*2. client event register remote info*/
-        pair_epoll_data data;
-        data.pair_fd = remote;
-        ev->data.ptr = &data;
+        fd_map[client] = remote;
 
         printf("register %d %d\n" , client , remote);
         /*3. remote add to epoll */
         add_proxy_epoll_event(client, remote , epoll_fd);
 
-//    }else{
-//        /*
-//           1. client read to porxy
-//           2. proxy read to client
-//        */
-//
-//        printf("on send");
-//        char buf[4096];
-//        count = read_all(client, buf);
-//        pair_epoll_data * data = (pair_epoll_data *) ev->data.ptr;
-//        printf("send all to %d" , data->pair_fd);
-//        send_all(data->pair_fd , buf);
-//    }
+    }else{
+        /*
+           1. client read to porxy
+           2. proxy read to client
+        */
+
+        printf("on send");
+        char buf[4096];
+        count = read_all(client, buf);
+        int fd = fd_map[client];
+        printf("send all to %d %d" ,fd,client);
+        send_all(fd , buf);
+    }
 }
 
 
