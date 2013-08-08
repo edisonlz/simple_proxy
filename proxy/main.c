@@ -69,11 +69,10 @@ int connect_remote(char *server,int port){
     }
 
     make_socket_non_blocking(remote);
-
     return remote;
 }
 
-void add_proxy_epoll_event(int client,int remote,int epollfd){
+void add_proxy_epoll_event(int client,int remote,int epoll_fd){
 
     struct epoll_event ev;
 
@@ -82,7 +81,7 @@ void add_proxy_epoll_event(int client,int remote,int epollfd){
     ev.data.ptr = &data;
     
     ev.events = EPOLLIN ; //| EPOLLOUT;  | EPOLLET; //  read, edge triggered
-    if (epoll_ctl(epollfd, EPOLL_CTL_ADD, remote, &ev) == -1) {
+    if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, remote, &ev) == -1) {
         perror("remote proxy add event");
         exit(EXIT_FAILURE);
     }
@@ -94,9 +93,9 @@ void process_request(int client, int epoll_fd, struct epoll_event* ev) {
 
     ssize_t count;
 
-    printf("on !ev->data.ptr\n");
+    printf("on !ev->data.ptr %d\n", ev->data.ptr);
     
-    if(ev->data.ptr==NULL){
+    if(!ev->data.ptr){
 
         printf("!ev->data.ptr\n");
 
