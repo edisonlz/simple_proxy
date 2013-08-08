@@ -115,6 +115,11 @@ void process_request(int client, int epoll_fd) {
 
         printf("server:%s,port:%d\n",server,port);
 
+        if(!server || !port){
+            close(client);
+            return;
+        }
+
         /*1. connect to remote server*/
         int remote = connect_remote(server, port);
 
