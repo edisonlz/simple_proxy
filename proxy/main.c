@@ -35,9 +35,7 @@ void io_loop(int listen_sock, int epoll_fd) {
                     if (events & EPOLLIN) {
 
                         printf("process request, sock_fd %d\n", epoll_fd);
-                        epoll_events[i].data.ptr = NULL;
                         process_request(epoll_events[i].data.fd, epoll_fd, &epoll_events[i]);
-                        
                     }
                     
                     if (events & EPOLLOUT) {
@@ -98,7 +96,7 @@ void process_request(int client, int epoll_fd, struct epoll_event* ev) {
     
     //if(!ev->data.ptr){
 
-        printf("!ev->data.ptr\n");
+        printf("!ev->data.ptr %d %d %d\n",ev->data.u64,ev->data.u32,ev->data.ptr);
 
         /* proxy to server*/
         
