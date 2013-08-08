@@ -96,7 +96,7 @@ void process_request(int client, int epoll_fd, struct epoll_event* ev) {
 
     printf("on !ev->data.ptr\n");
     
-    if(!ev->data.ptr){
+    if(ev->data.ptr==NULL){
 
         printf("!ev->data.ptr\n");
 
@@ -113,7 +113,7 @@ void process_request(int client, int epoll_fd, struct epoll_event* ev) {
         int port;
 
         char * p;
-        p = strtok (buf, split);
+        p = strtok(buf, split);
         server = p;
         p = strtok(NULL, split);
         port = atoi(p);
