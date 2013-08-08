@@ -5,8 +5,7 @@
 /* for select */
 #include <sys/select.h>
 
-int size = 1024 * 1024;
-int fd_map[size] = {0};
+int fd_map[1024 * 1024] = {0};
 
 
 void io_loop(int listen_sock, int epoll_fd) {
