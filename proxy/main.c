@@ -130,12 +130,10 @@ void process_request(int client, int epoll_fd) {
            1. client read to porxy
            2. proxy read to client
         */
-
-        printf("on send");
         char buf[4096];
         count = read_all(client, buf);
         int fd = fd_map[client];
-        printf("send all to %d %d" ,fd,client);
+        printf("send all to %d %d\n" ,fd,client);
         send_all(fd , buf);
     }
 }
