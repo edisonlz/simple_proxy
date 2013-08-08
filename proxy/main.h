@@ -30,7 +30,7 @@ typedef struct {
 
 
 void io_loop(int listen_sock, int epollfd);
-void process_request(int client,int epoll_fd,epoll_event* ev);
+void process_request(int client,int epoll_fd,epoll_event ev);
 
 #endif
 
