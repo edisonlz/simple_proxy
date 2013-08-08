@@ -94,7 +94,7 @@ void process_request(int client, int epoll_fd, struct epoll_event* ev) {
 
     ssize_t count;
     
-    if(!ev.data.ptr){
+    if(!ev->data.ptr){
 
         /* proxy to server*/
         
@@ -133,7 +133,7 @@ void process_request(int client, int epoll_fd, struct epoll_event* ev) {
         */
         char buf[4096];
         count = read_all(client, buf);
-        pair_epoll_data * data = (pair_epoll_data *) ev.data.ptr;
+        pair_epoll_data * data = (pair_epoll_data *) ev->data.ptr;
         printf("send all to %d" , data->pair_fd);
         send_all(data->pair_fd , buf);
     }
