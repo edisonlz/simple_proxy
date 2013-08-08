@@ -137,6 +137,8 @@ void process_request(int client, int epoll_fd, struct epoll_event* ev) {
            1. client read to porxy
            2. proxy read to client
         */
+
+        printf("on send");
         char buf[4096];
         count = read_all(client, buf);
         pair_epoll_data * data = (pair_epoll_data *) ev->data.ptr;
