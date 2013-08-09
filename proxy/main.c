@@ -1,11 +1,13 @@
 #include "main.h"
 #include "network.h"
 #include "process.h"
+#include "dict.h"
+
 
 /* for select */
-#include <sys/select.h>
+//#include <sys/select.h>
+//int fd_map[1024 * 1024] = {0};
 
-int fd_map[1024 * 1024] = {0};
 
 
 void io_loop(int listen_sock, int epoll_fd) {
@@ -32,7 +34,10 @@ void io_loop(int listen_sock, int epoll_fd) {
                         #endif
                     
                         close_and_clean(epoll_events[i].data.fd);
-                        close_and_clean(fd_map[epoll_events[i].data.fd]);
+                        connect_fd_struct* s = hash_find(client);
+                        if(s){
+                            close_and_clean(s->fd);
+                        }
                     
                 } else {
                     if (events & EPOLLIN) {
@@ -78,7 +83,8 @@ void add_proxy_epoll_event(int client,int remote,int epoll_fd){
 
     struct epoll_event ev;
     
-    fd_map[remote] = client;
+    //fd_map[remote] = client;
+    hash_set(remote , client);
 
     ev.data.fd = remote;
     ev.events = EPOLLIN; //| EPOLLOUT;  | EPOLLET; //  read, edge triggered
@@ -94,7 +100,9 @@ void process_request(int client, int epoll_fd) {
 
     ssize_t count;
     
-    if(!fd_map[client]){
+    //if(!fd_map[client]){
+    connect_fd_struct* s = hash_find(client);
+    if(!s){
 
         /* proxy to server*/
         
@@ -131,7 +139,8 @@ void process_request(int client, int epoll_fd) {
         }
 
         /*2. client event register remote info*/
-        fd_map[client] = remote;
+        //fd_map[client] = remote;
+        hash_set(client , remote);
 
         printf("register %d %d\n" , client , remote);
         /*3. remote add to epoll */
@@ -144,7 +153,8 @@ void process_request(int client, int epoll_fd) {
         */
         char buf[4096];
         count = read_all(client, buf);
-        int fd = fd_map[client];
+        //int fd = fd_map[client];
+        int fd = s->fd;
 
         printf("send all to %d %d\n" ,fd,client);
         
