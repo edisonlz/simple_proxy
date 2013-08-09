@@ -14,7 +14,7 @@ connect_fd_struct *hash_find(int key) {
 void hash_set(int fd,int value) {
 
     connect_fd_struct *s = (connect_fd_struct*) malloc(sizeof(connect_fd_struct));
-    s->pair_fd = value;
+    strcpy(s->pair_fd , value);
     HASH_ADD_INT( fds, fd, s );
 
 }
