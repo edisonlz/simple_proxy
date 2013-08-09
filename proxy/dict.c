@@ -20,7 +20,7 @@ void hash_set(int fd,int value) {
 
     connect_fd_struct *r =  hash_find(fd);
 
-    printf("hash get %d %d\n",fd ,r->fd);
+    //printf("hash get %d %d\n",fd ,r->fd);
 
 }
 
