@@ -1,3 +1,4 @@
+#include "dict.h"
 #include "main.h"
 #include "network.h"
 #include "process.h"
