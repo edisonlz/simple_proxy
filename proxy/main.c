@@ -161,7 +161,7 @@ void process_request(int client, int epoll_fd) {
         //int fd = fd_map[client];
         int fd = s->fd;
 
-        printf("send all to %d %d\n" ,fd,client);
+        printf("send all to %d %d\n" ,fd ,client);
         
         if(strlen(buf)>0){
             send_all(fd , buf);
