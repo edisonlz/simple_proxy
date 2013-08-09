@@ -4,7 +4,7 @@ connect_fd_struct  *fds = NULL;
 
 connect_fd_struct *hash_find(int key) {
 
-    struct connect_fd_struct *s;
+    connect_fd_struct *s;
 
     HASH_FIND_INT(fds, &key, s);
     return s;
@@ -13,7 +13,7 @@ connect_fd_struct *hash_find(int key) {
 
 void hash_set(int fd,int value) {
 
-    struct connect_fd_struct *s;
+    connect_fd_struct *s;
 
     HASH_FIND_INT(fds, &fd, s);  /* id already in the hash? */
     if (s==NULL) {
