@@ -9,7 +9,7 @@
 //#include <sys/select.h>
 //int fd_map[1024 * 1024] = {0};
 
-
+connect_fd_struct  *fds = NULL;
 
 void io_loop(int listen_sock, int epoll_fd) {
 

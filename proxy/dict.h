@@ -5,10 +5,8 @@
 
 typedef struct connect_fd {
     int fd; //connection file descripter
-}connect_fd_struct;
+} connect_fd_struct;
 
-
-connect_fd_struct  *fds = NULL;
 
 connect_fd_struct *hash_find(int key);
 
