@@ -15,6 +15,7 @@ void hash_set(int fd,int value) {
 
     connect_fd_struct *s = (connect_fd_struct*) malloc(sizeof(connect_fd_struct));
     //strcpy(s->pair_fd , value);
+    s->fd = fd;
     s->pair_fd = value;
     HASH_ADD_INT( fds, fd, s );
 
