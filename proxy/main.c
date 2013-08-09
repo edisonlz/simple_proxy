@@ -34,7 +34,7 @@ void io_loop(int listen_sock, int epoll_fd) {
                         #endif
                     
                         close_and_clean(epoll_events[i].data.fd);
-                        connect_fd_struct* s = hash_find(client);
+                        connect_fd_struct* s = hash_find(epoll_events[i].data.fd);
                         if(s){
                             close_and_clean(s->fd);
                         }
