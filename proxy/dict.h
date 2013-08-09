@@ -1,6 +1,7 @@
 #include <string.h>   /* memcmp,strlen */
 #include <stddef.h>   /* ptrdiff_t */
 #include <stdlib.h>   /* exit() */
+#include <stdio.h>
 #include "uthash.h"
 
 typedef struct connect_fd {
