@@ -125,7 +125,10 @@ void process_request(int client, int epoll_fd) {
         p = strtok(buf, split);
         server = p;
         p = strtok(NULL, split);
-        port = atoi(p);
+        if(*p){
+            port = atoi(p);
+        }
+
 
         printf("server:%s,port:%d\n",server,port);
 
