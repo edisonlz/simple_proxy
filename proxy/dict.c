@@ -15,6 +15,7 @@ void hash_set(int fd,int value) {
 
     connect_fd_struct *s = (connect_fd_struct*) malloc(sizeof(connect_fd_struct));
     s->fd = value;
+    printf("hash set %d %d",fd ,s->fd);
     HASH_ADD_INT( fds, fd, s );
 
 //    HASH_FIND_INT(fds, &fd, s);  /* id already in the hash? */
