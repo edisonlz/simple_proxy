@@ -15,11 +15,7 @@ void hash_set(int fd,int value) {
 
     connect_fd_struct *s = (connect_fd_struct*) malloc(sizeof(connect_fd_struct));
     s->pair_fd = value;
-    printf("hash set %d %d\n",fd ,s->c_fd);
     HASH_ADD_INT( fds, fd, s );
-
-    //connect_fd_struct *r =  hash_find(fd);
-    //printf("hash get %d %d\n",fd,r);
 
 }
 
