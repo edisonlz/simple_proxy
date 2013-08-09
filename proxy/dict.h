@@ -5,7 +5,7 @@
 #include "uthash.h"
 
 typedef struct connect_fd {
-    int fd; //connection file descripter
+    int c_fd; //connection file descripter
     UT_hash_handle hh; /* makes this structure hashable */
 } connect_fd_struct;
 

@@ -159,7 +159,7 @@ void process_request(int client, int epoll_fd) {
         char buf[4096];
         count = read_all(client, buf);
         //int fd = fd_map[client];
-        int fd = s->fd;
+        int fd = s->c_fd;
 
         printf("send all to %d %d\n" ,fd ,client);
         
