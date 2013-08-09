@@ -1,7 +1,7 @@
 #include "main.h"
 #include "network.h"
 #include "process.h"
-#include "dict.h"
+
 
 
 /* for select */
@@ -36,7 +36,13 @@ void io_loop(int listen_sock, int epoll_fd) {
                         close_and_clean(epoll_events[i].data.fd);
                         connect_fd_struct* s = hash_find(epoll_events[i].data.fd);
                         if(s){
+
                             close_and_clean(s->fd);
+
+                            connect_fd_struct* r = hash_find(s->fd);
+                            
+                            hash_delete(s);
+                            hash_delete(r);
                         }
                     
                 } else {
