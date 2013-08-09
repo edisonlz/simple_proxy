@@ -1,5 +1,6 @@
 #include "dict.h"
 
+connect_fd_struct  *fds = NULL;
 
 connect_fd_struct *find(int key) {
 
