@@ -2,7 +2,7 @@
 
 connect_fd_struct  *fds = NULL;
 
-connect_fd_struct *find(int key) {
+connect_fd_struct *hash_find(int key) {
 
     struct connect_fd_struct *s;
 
@@ -11,7 +11,7 @@ connect_fd_struct *find(int key) {
 }
 
 
-void set(int fd,int value) {
+void hash_set(int fd,int value) {
 
     struct connect_fd_struct *s;
 
@@ -25,7 +25,7 @@ void set(int fd,int value) {
 }
 
 
-void delete(connect_fd_struct *fd) {
+void hash_delete(connect_fd_struct *fd) {
     HASH_DEL( fds, fd);
     free(fd);
 }
